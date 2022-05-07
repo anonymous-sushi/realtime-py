@@ -108,6 +108,9 @@ class Socket:
         print("Closed WS", res)
         self.connected = False
 
+    async def status(self) -> None:
+        return self.connected
+
     async def _keep_alive(self) -> None:
         """
         Sending heartbeat to server every 5 seconds
