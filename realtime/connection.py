@@ -44,25 +44,24 @@ class Socket:
         self.ws_connection: websockets.client.WebSocketClientProtocol
         self.kept_alive: bool = False
 
-    @ensure_connection
-    def listen(self) -> None:
-        """
-        Wrapper for async def _listen() to expose a non-async interface
-        In most cases, this should be the last method executed as it starts an infinite listening loop.
-        :return: None
-        """
-        loop = asyncio.get_running_loop()
-        loop.run_until_complete(asyncio.gather(
-            self._listen(), self._keep_alive()))
+    # @ensure_connection
+    # def listen(self) -> None:
+    #     """
+    #     Wrapper for async def _listen() to expose a non-async interface
+    #     In most cases, this should be the last method executed as it starts an infinite listening loop.
+    #     :return: None
+    #     """
+    #     loop = asyncio.get_running_loop()
+    #     loop.run_until_complete(asyncio.gather(
+    #         self._listen(), self._keep_alive()))
 
-    async def _listen(self) -> None:
+    async def listen(self) -> None:
         """
         An infinite loop that keeps listening.
         :return: None
         """
-        while True:
+        async for msg in websocket:
             try:
-                msg = await self.ws_connection.recv()
                 msg = Message(**json.loads(msg))
                 if msg.event == ChannelEvents.reply:
                     continue
@@ -75,16 +74,16 @@ class Socket:
                 logging.exception("Connection closed")
                 break
 
-    def connect(self) -> None:
-        """
-        Wrapper for async def _connect() to expose a non-async interface
-        """
-        loop = asyncio.get_running_loop()
-        task = asyncio.create_task(self._connect())
-        await task
-        self.connected = True
+    # async def connect(self) -> None:
+    #     """
+    #     Wrapper for async def _connect() to expose a non-async interface
+    #     """
+    #     loop = asyncio.get_running_loop()
+    #     task = asyncio.create_task(self._connect())
+    #     await task
+    #     self.connected = True
 
-    async def _connect(self) -> None:
+    async def connect(self) -> None:
 
         ws_connection = await websockets.connect(self.url)
         if ws_connection.open:
@@ -94,6 +93,7 @@ class Socket:
 
         else:
             raise Exception("Connection Failed")
+        self.connected = True
 
     async def _keep_alive(self) -> None:
         """
