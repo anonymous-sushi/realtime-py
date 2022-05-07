@@ -73,16 +73,10 @@ class Socket:
             try:
                 msg = Message(**json.loads(msg))
                 if msg.event == ChannelEvents.reply:
-                    print("reply")
                     continue
-                print("Channels",self.channels)
                 for channel in self.channels.get(msg.topic, []):
-                    print("Channel",channel)
-                    print("Listeners",channel.listeners)
-                    print("Event",msg.event)
                     for cl in channel.listeners:
                         if cl.event == msg.event:
-                            print("found callback")
                             await cl.callback(msg.payload)
 
             except websockets.exceptions.ConnectionClosed:
