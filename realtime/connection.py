@@ -80,7 +80,7 @@ class Socket:
         Wrapper for async def _connect() to expose a non-async interface
         """
         loop = asyncio.get_running_loop()
-        loop.run_until_complete(self._connect())
+        asyncio.create_task(self._connect())
         self.connected = True
 
     async def _connect(self) -> None:
