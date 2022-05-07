@@ -105,15 +105,12 @@ class Socket:
             raise Exception("Connection Failed")
 
     async def disconnect(self) -> None:
-        print("Closed WS")
-        res = self.ws_connection.close()
-        print("Closed WS2", self.ws_connection.open)
-        res = await self.ws_connection.close()
-        print("Closed WS3", self.ws_connection.open)
+        await self.ws_connection.close()
+        print("Closed WS", self.ws_connection.open)
         self.connected = False
 
     async def status(self) -> None:
-        return self.connected
+        return self.ws_connection.open
 
     async def _keep_alive(self) -> None:
         """
