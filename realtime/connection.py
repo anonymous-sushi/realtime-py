@@ -104,8 +104,9 @@ class Socket:
             raise Exception("Connection Failed")
 
     async def disconnect(self) -> None:
-        res = await websockets.close()
+        res = await self.ws_connection.close()
         print("Closed WS", res)
+        self.connected = False
 
     async def _keep_alive(self) -> None:
         """
