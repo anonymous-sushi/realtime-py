@@ -75,6 +75,7 @@ class Socket:
                 if msg.event == ChannelEvents.reply:
                     print("reply")
                     continue
+                print(self.channels)
                 for channel in self.channels.get(msg.topic, []):
                     print(channel, channel.listeners)
                     print(msg.event)
