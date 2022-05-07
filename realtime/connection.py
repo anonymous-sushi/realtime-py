@@ -76,6 +76,8 @@ class Socket:
                     print("reply")
                     continue
                 for channel in self.channels.get(msg.topic, []):
+                    print(channel, channel.listeners)
+                    print(msg.event)
                     for cl in channel.listeners:
                         if cl.event == msg.event:
                             print("found callback")
