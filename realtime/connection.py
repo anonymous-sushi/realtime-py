@@ -107,9 +107,9 @@ class Socket:
     async def disconnect(self) -> None:
         print("Closed WS")
         res = self.ws_connection.close()
-        print("Closed WS", res)
+        print("Closed WS2", self.ws_connection.open)
         res = await self.ws_connection.close()
-        print("Closed WS", res)
+        print("Closed WS3", self.ws_connection.open)
         self.connected = False
 
     async def status(self) -> None:
