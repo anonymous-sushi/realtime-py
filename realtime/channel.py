@@ -49,12 +49,14 @@ class Channel:
         Coroutine that attempts to join Phoenix Realtime server via a certain topic
         :return: None
         """
+        print(dict(topic=self.topic, event="phx_join",
+                        payload={}, ref=None))
         join_req = dict(topic=self.topic, event="phx_join",
                         payload={}, ref=None)
 
         try:
             await self.socket.ws_connection.send(json.dumps(join_req))
-
+            print("requested to join topic!")
         except Exception as e:
             print(str(e))  # TODO: better error propagation
             return
