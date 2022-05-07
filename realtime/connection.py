@@ -97,7 +97,7 @@ class Socket:
 
         ws_connection = await websockets.connect(self.url)
         if ws_connection.open:
-            logging.info("Connection was successful")
+            print("Connection was successful")
             self.ws_connection = ws_connection
             self.connected = True
         else:
@@ -119,8 +119,8 @@ class Socket:
                 )
                 await self.ws_connection.send(json.dumps(data))
                 await asyncio.sleep(self.hb_interval)
-            except websockets.exceptions.ConnectionClosed:
-                logging.exception("Connection with server closed")
+            except websockets.exceptions.ConnectionClosed as e:
+                print("Connection with server closed", e)
                 break
 
     async def subscribe(self, topic) -> None:
@@ -133,7 +133,7 @@ class Socket:
             )
             await self.ws_connection.send(json.dumps(data))
         except websockets.exceptions.ConnectionClosed:
-            logging.exception("Connection with server closed")
+            print("Connection with server closed",e)
 
     @ensure_connection
     def set_channel(self, topic: str) -> Channel:
