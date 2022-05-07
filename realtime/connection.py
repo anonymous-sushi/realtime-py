@@ -71,8 +71,10 @@ class Socket:
         """
         async for msg in self.ws_connection:
             try:
+                print(f"found message", ,sg)
                 msg = Message(**json.loads(msg))
                 if msg.event == ChannelEvents.reply:
+                    print("reply")
                     continue
                 for channel in self.channels.get(msg.topic, []):
                     for cl in channel.listeners:
@@ -80,7 +82,7 @@ class Socket:
                             cl.callback(msg.payload)
 
             except websockets.exceptions.ConnectionClosed:
-                print("Exception")
+                print("Exception connection closed")
                 logging.exception("Connection closed")
                 break
 
@@ -94,15 +96,14 @@ class Socket:
     #     self.connected = True
 
     async def connect(self) -> None:
-
         ws_connection = await websockets.connect(self.url)
         if ws_connection.open:
             print("Connection was successful")
             self.ws_connection = ws_connection
             self.connected = True
         else:
+            print("Failed connection")
             raise Exception("Connection Failed")
-        self.connected = True
 
     async def _keep_alive(self) -> None:
         """
@@ -111,6 +112,7 @@ class Socket:
         """
         while True:
             try:
+                print("sending heartbeat")
                 data = dict(
                     topic=PHOENIX_CHANNEL,
                     event=ChannelEvents.heartbeat,
@@ -132,6 +134,7 @@ class Socket:
                 ref=None,
             )
             await self.ws_connection.send(json.dumps(data))
+            print("subscribed")
         except websockets.exceptions.ConnectionClosed:
             print("Connection with server closed",e)
 
