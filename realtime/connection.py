@@ -134,7 +134,6 @@ class Socket:
             await self.ws_connection.send(json.dumps(data))
         except websockets.exceptions.ConnectionClosed:
             logging.exception("Connection with server closed")
-            break
 
     @ensure_connection
     def set_channel(self, topic: str) -> Channel:
