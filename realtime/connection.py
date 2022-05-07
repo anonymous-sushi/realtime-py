@@ -71,7 +71,6 @@ class Socket:
         """
         async for msg in self.ws_connection:
             try:
-                print(f"found message", msg)
                 msg = Message(**json.loads(msg))
                 if msg.event == ChannelEvents.reply:
                     print("reply")
@@ -79,6 +78,7 @@ class Socket:
                 for channel in self.channels.get(msg.topic, []):
                     for cl in channel.listeners:
                         if cl.event == msg.event:
+                            print("found callback")
                             cl.callback(msg.payload)
 
             except websockets.exceptions.ConnectionClosed:
