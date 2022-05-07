@@ -53,6 +53,7 @@ class Socket:
         self.hb_interval: int = hb_interval
         self.ws_connection: websockets.client.WebSocketClientProtocol
         self.kept_alive: bool = False
+
     # @ensure_connection
     # def listen(self) -> None:
     #     """
@@ -104,8 +105,9 @@ class Socket:
             raise Exception("Connection Failed")
 
     async def disconnect(self) -> None:
-        res = await self.ws_connection.close()
         print("Closed WS", res)
+        res = self.ws_connection.close()
+        res = await self.ws_connection.close()
         self.connected = False
 
     async def status(self) -> None:
