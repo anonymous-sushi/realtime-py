@@ -103,6 +103,10 @@ class Socket:
             print("Failed connection")
             raise Exception("Connection Failed")
 
+    async def disconnect(self) -> None:
+        res = await websockets.close()
+        print("Closed WS", res)
+
     async def _keep_alive(self) -> None:
         """
         Sending heartbeat to server every 5 seconds
