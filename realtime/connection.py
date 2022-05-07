@@ -79,7 +79,7 @@ class Socket:
         """
         Wrapper for async def _connect() to expose a non-async interface
         """
-        loop = asyncio.get_event_loop()  # TODO: replace with get_running
+        loop = asyncio.get_running_loop()
         loop.run_until_complete(self._connect())
         self.connected = True
 
