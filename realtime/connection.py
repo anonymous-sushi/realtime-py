@@ -4,6 +4,8 @@ import logging
 from collections import defaultdict
 from functools import wraps
 from typing import Any, Callable
+import urllib.parse as urlparse
+from urllib.parse import urlencode
 
 import websockets
 
@@ -25,6 +27,12 @@ def ensure_connection(func: Callable):
 
     return wrapper
 
+def appendParams(url, params):
+    url_parts = list(urlparse.urlparse(url))
+    query = dict(urlparse.parse_qsl(url_parts[4]))
+    query.update(params)
+    url_parts[4] = urlencode(query)
+    return urlparse.urlunparse(url_parts)
 
 class Socket:
     def __init__(self, url: str, params: dict = {}, hb_interval: int = 5) -> None:
@@ -40,10 +48,11 @@ class Socket:
         self.channels = defaultdict(list)
         self.connected = False
         self.params: dict = params
+        if self.params:
+            self.url = appendParams(url, params)
         self.hb_interval: int = hb_interval
         self.ws_connection: websockets.client.WebSocketClientProtocol
         self.kept_alive: bool = False
-
     # @ensure_connection
     # def listen(self) -> None:
     #     """
@@ -85,7 +94,7 @@ class Socket:
 
     async def connect(self) -> None:
 
-        ws_connection = await websockets.connect(self.url, self.params)
+        ws_connection = await websockets.connect(self.url)
         if ws_connection.open:
             logging.info("Connection was successful")
             self.ws_connection = ws_connection
