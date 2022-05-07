@@ -80,6 +80,7 @@ class Socket:
                             cl.callback(msg.payload)
 
             except websockets.exceptions.ConnectionClosed:
+                print("Exception")
                 logging.exception("Connection closed")
                 break
 
@@ -121,6 +122,19 @@ class Socket:
             except websockets.exceptions.ConnectionClosed:
                 logging.exception("Connection with server closed")
                 break
+
+    async def subscribe(self, topic) -> None:
+        try:
+            data = dict(
+                topic=topic,
+                event="phx_join",
+                payload={},
+                ref=None,
+            )
+            await self.ws_connection.send(json.dumps(data))
+        except websockets.exceptions.ConnectionClosed:
+            logging.exception("Connection with server closed")
+            break
 
     @ensure_connection
     def set_channel(self, topic: str) -> Channel:
