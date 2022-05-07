@@ -71,6 +71,7 @@ class Socket:
         """
         async for msg in self.ws_connection:
             try:
+                print(msg)
                 msg = Message(**json.loads(msg))
                 if msg.event == ChannelEvents.reply:
                     print("reply")
