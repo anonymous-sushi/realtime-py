@@ -83,7 +83,7 @@ class Socket:
                     for cl in channel.listeners:
                         if cl.event == msg.event:
                             print("found callback")
-                            cl.callback(msg.payload)
+                            await cl.callback(msg.payload)
 
             except websockets.exceptions.ConnectionClosed:
                 print("Exception connection closed")
