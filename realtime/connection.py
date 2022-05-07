@@ -60,7 +60,7 @@ class Socket:
         An infinite loop that keeps listening.
         :return: None
         """
-        async for msg in websocket:
+        async for msg in self.ws_connection:
             try:
                 msg = Message(**json.loads(msg))
                 if msg.event == ChannelEvents.reply:
@@ -85,12 +85,11 @@ class Socket:
 
     async def connect(self) -> None:
 
-        ws_connection = await websockets.connect(self.url)
+        ws_connection = await websockets.connect(self.url, self.params)
         if ws_connection.open:
             logging.info("Connection was successful")
             self.ws_connection = ws_connection
             self.connected = True
-
         else:
             raise Exception("Connection Failed")
         self.connected = True
