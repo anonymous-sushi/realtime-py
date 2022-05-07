@@ -51,7 +51,7 @@ class Socket:
         In most cases, this should be the last method executed as it starts an infinite listening loop.
         :return: None
         """
-        loop = asyncio.get_event_loop()  # TODO: replace with get_running_loop
+        loop = asyncio.get_running_loop()
         loop.run_until_complete(asyncio.gather(
             self._listen(), self._keep_alive()))
 
