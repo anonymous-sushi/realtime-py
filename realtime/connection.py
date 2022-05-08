@@ -130,7 +130,7 @@ class Socket:
                 await asyncio.sleep(self.hb_interval)
             except websockets.exceptions.ConnectionClosed as e:
                 print("Connection with server closed", e)
-                break
+                await self.connect()
 
     async def subscribe(self, topic) -> None:
         try:
