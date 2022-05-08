@@ -65,7 +65,7 @@ class Socket:
         loop.run_until_complete(asyncio.gather(
             self._listen(), self._keep_alive()))
 
-    async def listen(self) -> None:
+    async def _listen(self) -> None:
         """
         An infinite loop that keeps listening.
         :return: None
