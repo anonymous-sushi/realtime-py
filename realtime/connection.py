@@ -54,16 +54,16 @@ class Socket:
         self.ws_connection: websockets.client.WebSocketClientProtocol
         self.kept_alive: bool = False
 
-    # @ensure_connection
-    # def listen(self) -> None:
-    #     """
-    #     Wrapper for async def _listen() to expose a non-async interface
-    #     In most cases, this should be the last method executed as it starts an infinite listening loop.
-    #     :return: None
-    #     """
-    #     loop = asyncio.get_running_loop()
-    #     loop.run_until_complete(asyncio.gather(
-    #         self._listen(), self._keep_alive()))
+    @ensure_connection
+    def listen(self) -> None:
+        """
+        Wrapper for async def _listen() to expose a non-async interface
+        In most cases, this should be the last method executed as it starts an infinite listening loop.
+        :return: None
+        """
+        loop = asyncio.get_running_loop()
+        loop.run_until_complete(asyncio.gather(
+            self._listen(), self._keep_alive()))
 
     async def listen(self) -> None:
         """
